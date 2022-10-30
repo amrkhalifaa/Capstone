@@ -80,7 +80,7 @@ jobs:
            install-kubectl: true
        - kubernetes/create-or-update-resource:
            get-rollout-status: true
-           resource-file-path: rolling-deployment.yml
+           resource-file-path: Rolling-deployment.yml
            resource-name: deployment/web-app-deployment
        - run:
            name: "Post Rolling Deployment Commands For Testing New Application"
