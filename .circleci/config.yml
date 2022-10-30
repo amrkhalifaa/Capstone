@@ -65,9 +65,6 @@ jobs:
              make install
              make test
 
-  ########## Building and Pushing the new docker image to ECR is done using Circleci orbs, it can be found in the workflow section ##########
-
-  ########## This steps if for rolling deployment to replace the old pods with the new pods ##########
    new-deployment:
      docker:
       - image: 'cimg/python:3.10'
