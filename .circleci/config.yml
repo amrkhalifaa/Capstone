@@ -41,7 +41,6 @@ jobs:
              export lb=`kubectl get service | tail -1 | cut -d " " -f 10`
              curl "http://$lb:8000"
 
-  ########## This steps is for liniting & testing the new application and Dockerfile after doing some modifications ##########
    lint-test-app:
      docker:
        - image: python:3.7.3-stretch
@@ -109,14 +108,14 @@ jobs:
              kubectl get pods
 
 workflows:
-  ########## In workflow sectiosn, Calling the jobs and Order it in correct order ##########
+  
   deployment:
     jobs:
        - aws-eks/create-cluster:
            cluster-name: prod-cluster
        - aws-ecr/build-and-push-image:
            dockerfile: Dockerfile-Old
-        #   path: ~/repo/Dockerfile
+        
            repo: devops-project
            tag: 'web-app-1.0'  
            region: us-east-1
@@ -133,7 +132,7 @@ workflows:
        - aws-ecr/build-and-push-image:
            name: BuildPush
            dockerfile: Dockerfile
-        #   path: ~/repo/Dockerfile
+        
            repo: devops-project
            tag: 'web-app-2.0'  
            region: us-east-1
@@ -144,8 +143,3 @@ workflows:
           cluster-name: prod-cluster
           requires:
              - BuildPush
-  ########## This Step is only used in this pipeline to terminate resources after finishing the project, it's not correct for real life in this situation ##########
-     #  - aws-eks/delete-cluster:
-     #     cluster-name: prod-cluster
-      #    requires:
-       #        - new-deployment
