@@ -6,7 +6,7 @@
 
 # Step 1:
 # Authenticate
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 016957448722.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 273801816274.dkr.ecr.us-east-1.amazonaws.com
 
 # Step 2:
 # Build image
@@ -14,8 +14,8 @@ docker build -t web-app:1.0 .
 
 # Step 2:  
 # Tag the image to push it to the repo
-docker tag web-app:1.0 016957448722.dkr.ecr.us-east-1.amazonaws.com/khalifacapstone:web-app-1.0
+docker tag web-app:1.0 273801816274.dkr.ecr.us-east-1.amazonaws.com/devops-project:web-app-1.0
 
 # Step 3:
 # Push image to a docker repository
-docker push 016957448722.dkr.ecr.us-east-1.amazonaws.com/khalifacapstone:web-app-1.0
+docker push 273801816274.dkr.ecr.us-east-1.amazonaws.com/devops-project:web-app-1.0
