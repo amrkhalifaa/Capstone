@@ -15,7 +15,7 @@ jobs:
          description: |
            Name of the EKS cluster
          type: string
-         default: prod-cluster
+         default: khalifacapstone
      steps:
        - checkout
        - aws-eks/update-kubeconfig-with-authenticator:
@@ -73,7 +73,7 @@ jobs:
          description: |
            Name of the EKS cluster
          type: string
-         default: prod-cluster
+         default: khalifacapstone
      steps:
        - checkout
        - aws-eks/update-kubeconfig-with-authenticator:
@@ -109,7 +109,7 @@ workflows:
   deployment:
     jobs:
        - aws-eks/create-cluster:
-           cluster-name: prod-cluster
+           cluster-name: khalifacapstone
        - aws-ecr/build-and-push-image:
            dockerfile: Dockerfile-Old
         
@@ -120,7 +120,7 @@ workflows:
            requires:
               - aws-eks/create-cluster           
        - prod-deployment:
-           cluster-name: prod-cluster
+           cluster-name: khalifacapstone
            requires:
               - aws-ecr/build-and-push-image
        - lint-test-app:
@@ -137,6 +137,6 @@ workflows:
            requires:
               - lint-test-app   
        - new-deployment:
-          cluster-name: prod-cluster
+          cluster-name: khalifacapstone
           requires:
              - BuildPush
