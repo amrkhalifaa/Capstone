@@ -14,8 +14,8 @@ docker build -t web-app:1.0 .
 
 # Step 2:  
 # Tag the image to push it to the repo
-docker tag web-app:1.0 273801816274.dkr.ecr.us-east-1.amazonaws.com/devops-project:web-app-1.0
+docker tag web-app:1.0 016957448722.dkr.ecr.us-east-1.amazonaws.com/khalifacapstone:web-app-1.0
 
 # Step 3:
 # Push image to a docker repository
-docker push 273801816274.dkr.ecr.us-east-1.amazonaws.com/devops-project:web-app-1.0
+docker push 016957448722.dkr.ecr.us-east-1.amazonaws.com/khalifacapstone:web-app-1.0

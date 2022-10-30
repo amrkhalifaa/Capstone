@@ -22,6 +22,6 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: 099281978446.dkr.ecr.us-east-1.amazonaws.com/devops-project:web-app-2.0
+        image: 016957448722.dkr.ecr.us-east-1.amazonaws.com/khalifacapstone:web-app-2.0
         ports:
         - containerPort: 5000
