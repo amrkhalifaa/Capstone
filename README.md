@@ -1,49 +1,90 @@
-[![CircleCI](https://circleci.com/gh/FahmyKhalilM/DevOps_Microservices.svg?style=svg)](https://circleci.com/gh/FahmyKhalilM/DevOps_Microservices)
+# Udacity AWS DevOps Engineer Capstone Project
 
-##### Project Overview
+[![Guillermo Ampie](https://circleci.com/gh/guillermo-ampie/devops-capstone.svg?style=shield)](https://github.com/guillermo-ampie/devops-capstone)
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+## Project Overview
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+This capstone project showcases the use of several CI/CD tools and cloud services covered in the program [Udacity - AWS Cloud DevOps Engineer.](https://www.udacity.com/course/cloud-dev-ops-nanodegree--nd9991)
 
-###### Project Tasks
+### Introduction
 
-Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
-* Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+This project "operationalize" a sample python/[flask](https://flask.palletsprojects.com/)
+demo app ["hello"](./hello_app/hello.py), using [CircleCI](https://www.circleci.com) and
+ a [Kubernetes](https://kubernetes.io/)(K8S) cluster deployed in [AWS EKS](https://aws.amazon.com/eks/)(Amazon Elastic Kubernetes Services):
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+* In a [CircleCI](https://www.circleci.com) pipeline, we lint the project's code, build
+ a [Docker](https://www.docker.com/resources/what-container) image and deploy it to a public
+Docker Registry: [Docker Hub](https://hub.docker.com/repository/docker/gampie/hello-app)
+* Then in an [AWS EKS](https://aws.amazon.com/eks/) cluster, we run the application
+* Later, we promote to production a new app version using a rolling update strategy
 
-**The final implementation of the project will showcase your abilities to operationalize production microservices.**
+All the project's tasks are included in a [Makefile](Makefile), which uses several shell scripts stored in the
+[bin](bin) directory.
 
----
-For Local INVOKE
-###### Setup the Environment
+### Project Tasks
 
-* Create a virtualenv and activate it
-* python3 -m venv ~/.devops
-* source ~/.devops/bin/activate
-* Run `make install` to install the necessary dependencies
+Using a CI/CD approach, we build a [Docker](https://www.docker.com/resources/what-container) image and then run it in a [Kubernetes](https://kubernetes.io/) cluster.
 
-## install hadolint
-* sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
-* sudo chmod +x /bin/hadolint
-* make lint for dockerfile
+The project includes the following main tasks:
 
-####### Running `app.py`
+* Initialize the Python virtual environment:  `make setup`
+* Install all necessary dependencies:  `make install`
+* Test the project's code using linting:  `make lint`
+  * Lints shell scripts, Dockerfile and python code
+* Create a Dockerfile to "containerize" the [hello](/hello_app/hello.py) application: [Dockerfile](hello_app/Dockerfile)
+* Deploy to a public Docker Registry:
+ [Docker Hub](https://hub.docker.com/repository/docker/gampie/hello-app) the containerized application
+* Deploy a Kubernetes cluster:  `make eks-create-cluster`
+* Deploy the application:  `make k8s-deployment`
+* Update the app in the cluster, using a rolling-update strategy:  `make rolling-update`
+* Delete the cluster:  `make eks-delete-cluster`
 
-1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./run_kubernetes.sh`
+The CirclCI pipeline([config.yml](.circleci/config.yml)) will execute the following steps automatically:
 
-####### Docker & Kubernetes Steps
+* `make setup`
+* `make install`
+* `make lint`
+* Build and publish the container image
 
-* Setup and Configure Docker locally
-* Setup and Configure Kubernetes locally
-* Create Flask app in Container
-* Run via kubectl
+To verify that the app is working, write your deployment's IP into your browser using port 80, like
+`http://localhost:80` or `http://LOAD_BALANCER_IP:80` (according to your environment).
+
+Alternatively, you can use `curl`: `curl localhost:80` or `curl LOAD_BALANCER_IP:80`
+
+### CI/CD Tools and Cloud Services
+
+* [Circle CI](https://www.circleci.com) - Cloud-based CI/CD service
+* [Amazon AWS](https://aws.amazon.com/) - Cloud services
+* [AWS EKS](https://aws.amazon.com/eks/) - Amazon Elastic Kubernetes Services
+* [AWS eksctl](https://eksctl.io) - The official CLI for Amazon EKS
+* [AWS CLI](https://aws.amazon.com/cli/) - Command-line tool for AWS
+* [CloudFormation](https://aws.amazon.com/cloudformation/) - Infrastructure as Code
+* [kubectl](https://kubernetes.io/docs/reference/kubectl/) - a command-line tool to control Kubernetes clusters
+* [Docker Hub](https://hub.docker.com/repository/docker/gampie/hello-app) - Container images repository service
+
+#### CicleCI Variables
+
+  The project uses [circleci/docker](https://circleci.com/developer/orbs/orb/circleci/docker) orb,
+  so to be able to `build` and `publish` your images, you need to set up the following environment
+  variables in your CircleCI project with your DockerHub account's values:
+
+* DOCKER_LOGIN
+* DOCKER_PASSWORD
+  
+### Main Files
+
+* [Makefile](./Makefile): the main file to execute all the project steps, i.e., the project's command center!
+* [config.yml](.circleci/config.yml): to test and integrate the app under CircleCI
+* [hello.app](./hello_app/hello.py): the sample python/flask app
+* [Dockerfile](./hello_app/Dockerfile): the Docker image's specification file
+* [hello_cluster.yml](./hello_cluster.yml): EKS cluster definition file
+
+The following shell scripts are invoked from the [Makefile](./Makefile)
+
+* [eks_create_cluster.sh](./bin/eks_create_cluster.sh): creates the EKS cluster
+* [install_eksctl.sh](./bin/install_eksctl.sh): installs the eksctl tool
+* [install_hadolint.sh](./bin/install_hadolint.sh): installs the hadolint linter(for Dockerfiles) tool
+* [install_kubectl.sh](./bin/install_kubectl.sh): installs the kubectl tool to control K8S clusters
+* [install_shellcheck.sh](./bin/install_shellcheck.sh): installs the shellcheck(for shell scripts) linter tool
+* [k8s_cleanup_resources.sh](./bin/k8s_cleanup_resources.sh): deletes services and deployments in a K8S cluster
+* [k8s_deployment.sh](./bin/k8s_deployment.sh): deploys and exposes a service in the K8S cluster
