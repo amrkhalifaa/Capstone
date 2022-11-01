@@ -164,7 +164,7 @@ workflows:
           requires:
              - BuildPush
   ########## This Step is only used in this pipeline to terminate resources after finishing the project, it's not correct for real life in this situation ##########
-     #  - aws-eks/delete-cluster:
+     #  - aws-eks/delete-cluster:1111
      #     cluster-name: prod-cluster##
       #    require
        #        - new-deployment
