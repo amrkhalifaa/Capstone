@@ -6,26 +6,7 @@ orbs:
   kubernetes: circleci/kubernetes@0.4.0
 
 jobs:
-  ########## This step used initdially to create the EKS clusters using Circleci Orbs instead of doing that manually ###########
-  # prod-cluster:
-  #   executor: aws-eks/python3
-  #   parameters:
-  #     cluster-name:
-  #       description: |
-  #         Name of the EKS cluster
-  #       type: string
-  #   steps:
-  #     - checkout
-  #     - kubernetes/install
-  #     - aws-eks/update-kubeconfig-with-authenticator:
-  #         cluster-name: << parameters.cluster-name >>
-  #         install-kubectl: true
-  #     - run:
-  #         name: "Verifying the creating cluster nodes"
-  #         command: |
-  #           kubectl get nodes
-          
-  ########## Deploy the Original old Application using Circleci Orbs ###ss#######
+
    prod-deployment:
      docker:
       - image: 'cimg/python:3.10'
@@ -135,7 +116,6 @@ workflows:
            cluster-name: prod-cluster
        - aws-ecr/build-and-push-image:
            dockerfile: old-app-Dockerfile
-        #   path: ~/repo/Dockerfile
            repo: devops-project
            tag: 'web-app-1.0'  
            region: us-east-1
@@ -152,7 +132,6 @@ workflows:
        - aws-ecr/build-and-push-image:
            name: BuildPush
            dockerfile: Dockerfile
-        #   path: ~/repo/Dockerfile
            repo: devops-project
            tag: 'web-app-2.0'  
            region: us-east-1
@@ -163,8 +142,3 @@ workflows:
           cluster-name: prod-cluster
           requires:
              - BuildPush
-  ########## This Step is only used in this pipeline to terminate resources after finishing the project, it's not correct for real life in this situation ##########
-     #  - aws-eks/delete-cluster:
-     #     cluster-name: prod-cluster
-      #    requires:
-       #        - new-deployment
